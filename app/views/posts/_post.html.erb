@@ -1,0 +1,8 @@
+<li class="card">
+  <h2><%= link_to post.title, post %></h2>
+  <p class="meta">By <%= post.user.name %></p>
+  <p class="lede"><%= truncate(post.body, length: 140) %></p>
+  <% if post.published_at.present? %>
+    <p class="meta">Published <%= time_ago_in_words(post.published_at) %> ago</p>
+  <% end %>
+</li>

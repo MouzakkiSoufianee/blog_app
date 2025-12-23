@@ -1,0 +1,26 @@
+<% content_for :title, "Posts" %>
+
+<section class="hero">
+  <div>
+    <h1>Stories that matter.</h1>
+    <p>Read the latest posts and share your voice. Thoughtful writing, clear authorship, and lively discussion.</p>
+    <div class="post-actions">
+      <%= link_to "Write a post", new_post_path, class: "btn" %>
+      <%= link_to "Browse all", posts_path, class: "btn btn-ghost" %>
+    </div>
+  </div>
+  <div class="hero-card">
+    <p class="meta">Fresh perspectives</p>
+    <p class="lede">Every post shows its author and invites comments. Join in with your own insights.</p>
+  </div>
+</section>
+
+<h2 class="section-title">Latest posts</h2>
+
+<% if @posts.any? %>
+  <ul class="grid-list">
+    <%= render @posts %>
+  </ul>
+<% else %>
+  <p>No posts yet.</p>
+<% end %>

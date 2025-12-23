@@ -1,0 +1,68 @@
+<% content_for :title, @post.title %>
+
+<div class="card">
+  <div class="post-head">
+    <h1><%= @post.title %></h1>
+    <p class="meta">By <%= @post.user.name %></p>
+    <% if @post.published_at.present? %>
+      <p class="meta">Published <%= l(@post.published_at, format: :long) %></p>
+    <% end %>
+  </div>
+
+  <div class="lede">
+    <%= simple_format(@post.body) %>
+  </div>
+</div>
+
+<h2 class="section-title">Comments</h2>
+
+<% if @post.comments.any? %>
+  <ul class="comment-list">
+    <% @post.comments.each do |comment| %>
+      <li class="comment-item">
+        <div><strong><%= comment.user.name %>:</strong></div>
+        <div class="lede"><%= simple_format(comment.body) %></div>
+        <p class="comment-meta"><%= l(comment.created_at, format: :short) %></p>
+        <%= button_to "Delete comment", [@post, comment], method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-ghost" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No comments yet.</p>
+<% end %>
+
+<h3 class="section-title">Add a comment</h3>
+
+<% if @comment&.errors&.any? %>
+  <div class="errors">
+    <h2><%= pluralize(@comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+    <ul>
+      <% @comment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="form-card">
+  <%= form_with model: [@post, (@comment || Comment.new)], local: true do |form| %>
+    <div class="form-group">
+      <%= form.label :user_id, "Author" %>
+      <%= form.collection_select :user_id, @users, :id, :name, prompt: "Select author", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :body, "Comment" %>
+      <%= form.text_area :body, rows: 4, required: true %>
+    </div>
+
+    <%= form.submit "Post comment", class: "btn" %>
+  <% end %>
+</div>
+
+<div class="post-actions" style="margin-top: 18px;">
+  <%= link_to "All posts", posts_path, class: "btn btn-ghost" %>
+  <%= link_to "New post", new_post_path, class: "btn btn-ghost" %>
+  <%= link_to "Edit post", edit_post_path(@post), class: "btn btn-ghost" %>
+  <%= button_to "Delete post", post_path(@post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-ghost" %>
+</div>
