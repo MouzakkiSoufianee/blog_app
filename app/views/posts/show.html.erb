@@ -3,7 +3,7 @@
 <div class="card">
   <div class="post-head">
     <h1><%= @post.title %></h1>
-    <p class="meta">By <%= @post.user.name %></p>
+    <p class="meta">By <%= @post.user.name %> • <strong><%= @post.status.humanize %></strong> • <%= pluralize(@post.comments_count, "comment") %></p>
     <% if @post.published_at.present? %>
       <p class="meta">Published <%= l(@post.published_at, format: :long) %></p>
     <% end %>

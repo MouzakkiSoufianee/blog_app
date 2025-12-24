@@ -3,7 +3,21 @@ class PostsController < ApplicationController
   before_action :set_users, only: %i[new create edit update show]
 
   def index
-    @posts = Post.includes(:user).order(created_at: :desc)
+    @posts = Post.includes(:user)
+
+    # Apply filters based on params
+    @posts = @posts.by_author(params[:author_id])
+    @posts = @posts.search(params[:query])
+
+    case params[:status]
+    when "published"
+      @posts = @posts.published_posts
+    when "drafts"
+      @posts = @posts.drafts
+    end
+
+    @posts = @posts.recent
+    @users = User.order(:name)
   end
 
   def show
@@ -51,6 +65,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, :published_at, :user_id)
+    params.require(:post).permit(:title, :body, :status, :published_at, :user_id)
   end
 end
