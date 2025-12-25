@@ -1,5 +1,17 @@
-<li class="card">
-  <h2><%= link_to post.title, post %></h2>
+<li class="card" id="<%= dom_id(post) %>">
+  <h2><%= link_to post.title, post, data: { turbo_frame: "_top" } %></h2>
   <p class="meta">By <%= post.user.name %> • <strong><%= post.status.humanize %></strong> • <%= pluralize(post.comments_count, "comment") %></p>
   <p class="lede"><%= truncate(post.body, length: 140) %></p>
+  <div class="post-actions" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+    <%= link_to "View", post_path(post), class: "btn", 
+        style: "background: linear-gradient(145deg, rgba(167, 139, 250, 0.14), rgba(139, 92, 246, 0.16)); border-color: var(--accent);",
+        data: { turbo_frame: "drawer" } %>
+    <%= link_to "Edit", edit_post_path(post), class: "btn", 
+        style: "background: linear-gradient(145deg, rgba(147, 197, 253, 0.14), rgba(96, 165, 250, 0.16)); border-color: var(--accent);",
+        data: { turbo_frame: "drawer" } %>
+    <%= button_to "Delete", post_path(post), method: :delete, 
+        class: "btn", 
+        style: "background: linear-gradient(145deg, rgba(248, 113, 113, 0.14), rgba(239, 68, 68, 0.16)); border-color: var(--danger);",
+        form: { data: { turbo_confirm: "Are you sure?" } } %>
+  </div>
 </li>

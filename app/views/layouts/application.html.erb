@@ -13,6 +13,42 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <script type="module">
+      import * as Turbo from 'https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.10/+esm'
+      import { Application, Controller } from 'https://cdn.jsdelivr.net/npm/@hotwired/stimulus@3.2.2/+esm'
+      
+      // Start Stimulus
+      const application = Application.start()
+      window.Stimulus = application
+      
+      // Register search controller
+      class SearchController extends Controller {
+        static targets = ["form"]
+        static values = { delay: { type: Number, default: 300 } }
+
+        connect() {
+          this.timeout = null
+          console.log("Search controller connected")
+        }
+
+        search() {
+          console.log("Search triggered")
+          clearTimeout(this.timeout)
+          
+          this.timeout = setTimeout(() => {
+            console.log("Submitting form")
+            this.formTarget.requestSubmit()
+          }, this.delayValue)
+        }
+
+        submit(event) {
+          clearTimeout(this.timeout)
+        }
+      }
+      
+      application.register("search", SearchController)
+    </script>
+
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
@@ -41,5 +77,49 @@
 
       <%= yield %>
     </main>
+
+    <!-- Drawer for New/Edit/View -->
+    <%= turbo_frame_tag "drawer", target: "_top" do %>
+    <% end %>
+    <div id="drawer-backdrop"></div>
+
+    <script>
+      document.addEventListener('turbo:load', () => {
+        const drawer = document.querySelector('turbo-frame#drawer');
+        const backdrop = document.getElementById('drawer-backdrop');
+        
+        if (!drawer || !backdrop) return;
+        
+        // Check drawer content and show/hide backdrop
+        const checkDrawer = () => {
+          const hasContent = drawer.innerHTML.trim() !== '' && drawer.children.length > 0;
+          if (hasContent) {
+            drawer.classList.add('show');
+            backdrop.classList.add('show');
+          } else {
+            drawer.classList.remove('show');
+            backdrop.classList.remove('show');
+          }
+        };
+        
+        // Watch for Turbo Frame loads
+        drawer.addEventListener('turbo:frame-load', checkDrawer);
+        drawer.addEventListener('turbo:frame-render', checkDrawer);
+        
+        // Watch for DOM changes
+        const observer = new MutationObserver(checkDrawer);
+        observer.observe(drawer, { childList: true, subtree: true });
+        
+        // Close drawer when backdrop is clicked
+        backdrop.addEventListener('click', () => {
+          drawer.innerHTML = '';
+          drawer.classList.remove('show');
+          backdrop.classList.remove('show');
+        });
+        
+        // Initial check
+        checkDrawer();
+      });
+    </script>
   </body>
 </html>

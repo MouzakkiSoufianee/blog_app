@@ -1,0 +1,10 @@
+<%= turbo_stream.prepend "posts" do %>
+  <ul class="grid-list" style="display: contents;">
+    <%= render @post %>
+  </ul>
+<% end %>
+
+<%= turbo_stream.update "drawer" do %>
+  <!-- Clear drawer content but keep the frame element so listeners persist -->
+  
+<% end %>

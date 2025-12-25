@@ -32,7 +32,10 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     if @post.save
-      redirect_to @post, notice: "Post created successfully."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @post, notice: "Post created successfully." }
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,7 +45,10 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
-      redirect_to @post, notice: "Post updated successfully."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @post, notice: "Post updated successfully." }
+      end
     else
       flash.now[:alert] = "Please fix the errors below"
       render :edit, status: :unprocessable_entity
@@ -51,7 +57,10 @@ class PostsController < ApplicationController
 
   def destroy
     @post.destroy
-    redirect_to posts_path, notice: "Post deleted successfully."
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to posts_path, notice: "Post deleted successfully." }
+    end
   end
 
   private

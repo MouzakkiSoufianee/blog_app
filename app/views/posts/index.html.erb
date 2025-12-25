@@ -16,14 +16,14 @@
 </section>
 
 <div class="form-card" style="margin-bottom: 24px;">
-  <%= form_with url: posts_path, method: :get, local: true do |form| %>
+  <%= form_with url: posts_path, method: :get, data: { controller: "search", search_target: "form", turbo_frame: "posts", action: "turbo:submit-end->search#submit" } do |form| %>
     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
         <%= form.label :status, "Status" %>
         <%= form.select :status, 
             options_for_select([["All", ""], ["Published", "published"], ["Drafts", "drafts"]], params[:status]), 
             {}, 
-            { onchange: "this.form.requestSubmit()" } %>
+            { data: { action: "change->search#search" } } %>
       </div>
 
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
@@ -33,7 +33,7 @@
             :id, 
             :name, 
             { prompt: "All authors", selected: params[:author_id] }, 
-            { onchange: "this.form.requestSubmit()" } %>
+            { data: { action: "change->search#search" } } %>
       </div>
 
       <div class="form-group" style="flex: 2; min-width: 250px; margin: 0;">
@@ -41,24 +41,29 @@
         <div style="display: flex; gap: 8px;">
           <%= form.text_field :query, 
               value: params[:query], 
-              placeholder: "Search title or body..." %>
-          <%= form.submit "Search", class: "btn" %>
+              placeholder: "Search title or body...",
+              data: { action: "input->search#search" } %>
+          <%= form.submit "Search", class: "btn", style: "flex-shrink: 0;" %>
         </div>
       </div>
     </div>
     
     <% if params[:status].present? || params[:author_id].present? || params[:query].present? %>
-      <%= link_to "Clear filters", posts_path, class: "btn btn-ghost", style: "margin-top: 12px;" %>
+      <%= link_to "Clear filters", posts_path, class: "btn btn-ghost", style: "margin-top: 12px;", data: { turbo_frame: "posts" } %>
     <% end %>
   <% end %>
 </div>
 
 <h2 class="section-title">Latest posts</h2>
 
-<% if @posts.any? %>
-  <ul class="grid-list">
-    <%= render @posts %>
-  </ul>
-<% else %>
-  <p>No posts yet.</p>
+<%= link_to "+ New Post", new_post_path, class: "btn", style: "margin-bottom: 16px; display: inline-block;", data: { turbo_frame: "drawer" } %>
+
+<%= turbo_frame_tag "posts" do %>
+  <% if @posts.any? %>
+    <ul class="grid-list">
+      <%= render @posts %>
+    </ul>
+  <% else %>
+    <p>No posts yet.</p>
+  <% end %>
 <% end %>

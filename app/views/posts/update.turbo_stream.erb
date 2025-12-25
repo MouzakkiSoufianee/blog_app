@@ -1,0 +1,8 @@
+<%= turbo_stream.replace dom_id(@post) do %>
+  <%= render @post %>
+<% end %>
+
+<%= turbo_stream.update "drawer" do %>
+  <!-- Clear drawer content but keep the frame element so listeners persist -->
+  
+<% end %>

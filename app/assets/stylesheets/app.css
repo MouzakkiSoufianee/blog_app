@@ -221,8 +221,85 @@ textarea { resize: vertical; }
 
 .comment-meta { color: var(--muted); font-size: 13px; margin: 4px 0 8px; }
 
+/* Drawer/Side Panel Styles */
+#drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+#drawer-backdrop.show {
+  display: block;
+}
+
+turbo-frame#drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 600px;
+  max-width: 90vw;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(11, 16, 33, 0.98));
+  border-left: 1px solid var(--border);
+  box-shadow: -10px 0 60px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  overflow-y: auto;
+  padding: 24px;
+  display: none;
+  animation: slideIn 0.3s ease;
+}
+
+turbo-frame#drawer.show {
+  display: block;
+}
+
+turbo-frame#drawer:empty {
+  display: none !important;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.drawer-close {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 12px 0;
+  margin: -24px -24px 16px -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
 @media (max-width: 768px) {
   .hero { grid-template-columns: 1fr; }
   .top-nav { padding: 12px 14px; }
   .page-main { padding: 24px 14px 60px; }
+  
+  turbo-frame#drawer {
+    width: 100vw;
+    max-width: 100vw;
+  }
 }
