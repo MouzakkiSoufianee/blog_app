@@ -47,6 +47,72 @@
       }
       
       application.register("search", SearchController)
+
+      // Styled confirmation prompt to replace the native confirm dialog
+      Turbo.setConfirmMethod((message, element) => {
+        return new Promise((resolve) => {
+          const overlay = document.createElement("div")
+          overlay.className = "confirm-overlay"
+
+          const dialog = document.createElement("div")
+          dialog.className = "confirm-dialog"
+          dialog.tabIndex = -1
+
+          const kicker = document.createElement("p")
+          kicker.className = "confirm-kicker"
+          kicker.textContent = element?.dataset?.confirmKicker || "Blog action"
+
+          const title = document.createElement("h3")
+          title.className = "confirm-title"
+          title.textContent = element?.dataset?.confirmTitle || "Please confirm"
+
+          const body = document.createElement("p")
+          body.className = "confirm-message"
+          body.textContent = message
+
+          const actions = document.createElement("div")
+          actions.className = "confirm-actions"
+
+          const cancelButton = document.createElement("button")
+          cancelButton.type = "button"
+          cancelButton.className = "btn btn-ghost btn-sm"
+          cancelButton.textContent = element?.dataset?.confirmCancel || "Cancel"
+
+          const confirmButton = document.createElement("button")
+          confirmButton.type = "button"
+          confirmButton.className = "btn btn-danger btn-sm"
+          confirmButton.textContent = element?.dataset?.confirmAction || "Delete"
+
+          const cleanup = (result) => {
+            overlay.remove()
+            resolve(result)
+          }
+
+          cancelButton.addEventListener("click", () => cleanup(false))
+          confirmButton.addEventListener("click", () => cleanup(true))
+
+          overlay.addEventListener("click", (event) => {
+            if (event.target === overlay) cleanup(false)
+          })
+
+          overlay.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") cleanup(false)
+            if (event.key === "Enter") cleanup(true)
+          })
+
+          actions.appendChild(cancelButton)
+          actions.appendChild(confirmButton)
+          dialog.appendChild(kicker)
+          dialog.appendChild(title)
+          dialog.appendChild(body)
+          dialog.appendChild(actions)
+          overlay.appendChild(dialog)
+          document.body.appendChild(overlay)
+
+          // Focus for keyboard users
+          setTimeout(() => dialog.focus(), 10)
+        })
+      })
     </script>
 
     <%= yield :head %>

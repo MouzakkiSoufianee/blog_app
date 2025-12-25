@@ -101,6 +101,21 @@ a:hover { color: var(--accent-strong); }
   background: var(--panel);
 }
 
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background: linear-gradient(145deg, rgba(248, 113, 113, 0.18), rgba(239, 68, 68, 0.2));
+  border-color: var(--danger);
+  color: #fee2e2;
+}
+
+.btn-danger:hover {
+  border-color: #fca5a5;
+}
+
 .flash {
   padding: 12px 14px;
   margin: 16px 0;
@@ -111,6 +126,39 @@ a:hover { color: var(--accent-strong); }
 
 .flash.notice { border-color: var(--success); color: var(--success); }
 .flash.alert { border-color: var(--danger); color: var(--danger); }
+
+.inline-notice-frame { display: block; margin-bottom: 16px; }
+
+.inline-notice {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.14), rgba(148, 163, 184, 0.08));
+  box-shadow: var(--shadow);
+}
+
+.inline-notice__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.6);
+  color: var(--success);
+  font-weight: 700;
+}
+
+.inline-notice__content { display: grid; gap: 4px; }
+
+.inline-notice__title { margin: 0; font-weight: 700; font-size: 16px; }
+.inline-notice__body { margin: 0; color: var(--muted); }
+
+.inline-notice__actions { display: flex; gap: 8px; align-items: center; }
 
 .hero {
   display: grid;
@@ -292,6 +340,40 @@ turbo-frame#drawer:empty {
   border-bottom: 1px solid var(--border);
   z-index: 10;
 }
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 22, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 1200;
+  animation: fadeIn 0.18s ease;
+}
+
+.confirm-dialog {
+  width: min(460px, 92vw);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(15, 23, 42, 0.96));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.confirm-kicker {
+  margin: 0 0 6px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.confirm-title { margin: 0 0 8px; font-size: 20px; }
+.confirm-message { margin: 0 0 16px; color: var(--muted); line-height: 1.6; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 @media (max-width: 768px) {
   .hero { grid-template-columns: 1fr; }

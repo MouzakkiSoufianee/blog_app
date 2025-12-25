@@ -15,6 +15,9 @@
   </div>
 </section>
 
+<%= turbo_frame_tag "posts_notice", class: "inline-notice-frame" do %>
+<% end %>
+
 <div class="form-card" style="margin-bottom: 24px;">
   <%= form_with url: posts_path, method: :get, data: { controller: "search", search_target: "form", turbo_frame: "posts", action: "turbo:submit-end->search#submit" } do |form| %>
     <div style="display: flex; gap: 12px; flex-wrap: wrap;">

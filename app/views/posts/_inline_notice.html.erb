@@ -1,0 +1,10 @@
+<div class="inline-notice success" role="status">
+  <div class="inline-notice__icon" aria-hidden="true">✓</div>
+  <div class="inline-notice__content">
+    <p class="inline-notice__title"><%= heading %></p>
+    <p class="inline-notice__body"><%= body %></p>
+  </div>
+  <div class="inline-notice__actions">
+    <%= link_to "Write a new post", new_post_path, class: "btn btn-ghost btn-sm", data: { turbo_frame: "drawer" } %>
+  </div>
+</div>

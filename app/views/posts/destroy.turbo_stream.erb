@@ -1,1 +1,13 @@
 <%= turbo_stream.remove dom_id(@post) %>
+
+<%= turbo_stream.update "posts_notice" do %>
+	<%= render partial: "inline_notice", locals: {
+				heading: "Post deleted",
+				body: "\"#{@post.title}\" has been removed from the feed."
+			} %>
+<% end %>
+
+<%= turbo_stream.update "drawer" do %>
+	<!-- Clear drawer content but keep the frame element so listeners persist -->
+  
+<% end %>
