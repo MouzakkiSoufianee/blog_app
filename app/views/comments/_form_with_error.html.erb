@@ -1,0 +1,18 @@
+<div class="form-card">
+  <% if error_message %>
+    <div class="errors" style="margin-bottom: 16px;">
+      <p style="color: var(--danger); font-weight: 500;"><%= error_message %></p>
+    </div>
+  <% end %>
+
+  <%= form_with model: [post, comment.persisted? ? comment : Comment.new], id: "new_comment_form" do |form| %>
+    <p class="meta" style="margin: 0 0 12px;">Commenting as <strong><%= current_user&.name || "Guest" %></strong></p>
+
+    <div class="form-group">
+      <%= form.label :body, "Comment" %>
+      <%= form.text_area :body, rows: 4, required: true, value: comment.persisted? ? comment.body : "" %>
+    </div>
+
+    <%= form.submit "Post comment", class: "btn" %>
+  <% end %>
+</div>

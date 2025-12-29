@@ -8,25 +8,14 @@
   <div class="card" style="margin: 0;">
     <div class="post-head">
       <h1><%= @post.title %></h1>
-      <p class="meta">By <%= @post.user.name %> • <strong><%= @post.status.humanize %></strong> • <%= pluralize(@post.comments_count, "comment") %></p>
-      <% if @post.published_at.present? %>
-        <p class="meta">Published <%= l(@post.published_at, format: :long) %></p>
-      <% end %>
+      <p class="meta">By <%= @post.user.name %> • <%= render "posts/status_badge", post: @post, id_suffix: :status_show, show_timestamp: true %> • <%= pluralize(@post.comments_count, "comment") %></p>
     </div>
 
     <div class="lede" style="margin: 18px 0;">
       <%= simple_format(@post.body) %>
     </div>
 
-    <div class="post-actions" style="margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap;">
-      <%= link_to "Edit", edit_post_path(@post), class: "btn", 
-          style: "background: linear-gradient(145deg, rgba(147, 197, 253, 0.14), rgba(96, 165, 250, 0.16)); border-color: var(--accent);",
-          data: { turbo_frame: "drawer" } %>
-      <%= button_to "Delete", post_path(@post), method: :delete, 
-          class: "btn", 
-          style: "background: linear-gradient(145deg, rgba(248, 113, 113, 0.14), rgba(239, 68, 68, 0.16)); border-color: var(--danger);",
-          form: { data: { turbo_frame: "_top", turbo_confirm: "Delete this post? Its comments will be removed too.", confirm_title: "Delete post", confirm_action: "Delete", confirm_cancel: "Keep it", confirm_kicker: "Heads up" } } %>
-    </div>
+    <%= render "posts/actions", post: @post %>
 
     <h2 class="section-title" style="margin-top: 24px;">Comments</h2>
 
@@ -55,10 +44,7 @@
 
     <div class="form-card">
       <%= form_with model: [@post, (@comment || Comment.new)], id: "new_comment_form" do |form| %>
-        <div class="form-group">
-          <%= form.label :user_id, "Author" %>
-          <%= form.collection_select :user_id, @users, :id, :name, { prompt: "Select author" }, { required: true } %>
-        </div>
+        <p class="meta" style="margin: 0 0 12px;">Commenting as <strong><%= current_user&.name || "Guest" %></strong></p>
 
         <div class="form-group">
           <%= form.label :body, "Comment" %>

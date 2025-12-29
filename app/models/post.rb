@@ -6,6 +6,10 @@ class Post < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
   validates :body, presence: true
+  validates :slug, presence: true, uniqueness: true
+
+  before_validation :generate_slug, on: :create
+  before_validation :ensure_unique_slug, on: :create
 
   # Scopes
   scope :published_posts, -> { where(status: statuses[:published]) }
@@ -16,4 +20,29 @@ class Post < ApplicationRecord
     return all if query.blank?
     where("title LIKE ? OR body LIKE ?", "%#{sanitize_sql_like(query)}%", "%#{sanitize_sql_like(query)}%")
   }
+
+  def to_param
+    slug
+  end
+
+  private
+
+  def generate_slug
+    return unless respond_to?(:slug=)
+    return if self[:slug].present?
+    self.slug = title.to_s.parameterize if title.present?
+  end
+
+  def ensure_unique_slug
+    return unless respond_to?(:slug)
+    return if self[:slug].blank?
+
+    base_slug = self[:slug]
+    counter = 2
+
+    while Post.where(slug: self[:slug]).where.not(id: id).exists?
+      self.slug = "#{base_slug}-#{counter}"
+      counter += 1
+    end
+  end
 end

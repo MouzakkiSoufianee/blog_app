@@ -11,10 +11,7 @@
 
 <div class="form-card">
   <%= form_with model: post do |form| %>
-    <div class="form-group">
-      <%= form.label :user_id, "Author" %>
-      <%= form.collection_select :user_id, @users, :id, :name, prompt: "Select author", required: true %>
-    </div>
+    <p class="meta" style="margin: 0 0 12px;">Author: <strong><%= current_user&.name || "Unknown" %></strong></p>
 
     <div class="form-group">
       <%= form.label :title %>

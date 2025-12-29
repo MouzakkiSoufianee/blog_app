@@ -18,5 +18,3 @@ Modern Rails blog demo with Turbo/Stimulus drawer flows, inline notices, and the
 
 ## Notes
 - Turbo + Stimulus power the drawer and form interactions.
-- Custom `Turbo.setConfirmMethod` provides the themed confirm dialog.
-- Inline post notices render via Turbo Stream updates to the `posts_notice` frame.

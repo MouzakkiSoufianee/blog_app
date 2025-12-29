@@ -1,6 +1,6 @@
 <li class="card" id="<%= dom_id(post) %>">
   <h2><%= link_to post.title, post, data: { turbo_frame: "_top" } %></h2>
-  <p class="meta">By <%= post.user.name %> • <strong><%= post.status.humanize %></strong> • <%= pluralize(post.comments_count, "comment") %></p>
+  <p class="meta">By <%= post.user.name %> • <%= render "posts/status_badge", post: post %> • <%= pluralize(post.comments_count, "comment") %></p>
   <p class="lede"><%= truncate(post.body, length: 140) %></p>
   <div class="post-actions" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
     <%= link_to "View", post_path(post), class: "btn", 

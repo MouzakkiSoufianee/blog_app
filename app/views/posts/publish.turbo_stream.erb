@@ -1,0 +1,12 @@
+<%= turbo_stream.replace dom_id(@post, :status) do %>
+  <%= render "posts/status_badge", post: @post %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@post, :status_show) do %>
+  <%= render "posts/status_badge", post: @post, id_suffix: :status_show, show_timestamp: true %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@post, :actions) do %>
+  <%= render "posts/actions", post: @post %>
+<% end %>
+

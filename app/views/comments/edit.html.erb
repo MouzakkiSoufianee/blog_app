@@ -4,10 +4,7 @@
       <h4 style="margin-top: 0;">Edit Comment</h4>
       
       <%= form_with model: [@post, @comment] do |form| %>
-        <div class="form-group">
-          <%= form.label :user_id, "Author" %>
-          <%= form.collection_select :user_id, @users, :id, :name, {}, { required: true } %>
-        </div>
+        <p class="meta" style="margin: 0 0 12px;">Author: <strong><%= @comment.user.name %></strong></p>
 
         <div class="form-group">
           <%= form.label :body, "Comment" %>

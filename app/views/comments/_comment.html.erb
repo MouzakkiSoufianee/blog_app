@@ -2,7 +2,7 @@
   <li class="comment-item">
     <div><strong><%= comment.user.name %>:</strong></div>
     <div class="lede"><%= simple_format(comment.body) %></div>
-    <p class="comment-meta"><%= l(comment.created_at, format: :short) %></p>
+    <p class="comment-meta"><%= comment.created_at ? l(comment.created_at, format: :short) : "Just now" %></p>
     <div style="display: flex; gap: 8px; margin-top: 8px;">
       <%= link_to "Edit", edit_post_comment_path(comment.post, comment), class: "btn btn-ghost", data: { turbo_frame: dom_id(comment) } %>
       <%= button_to "Delete", [comment.post, comment], method: :delete, 
