@@ -32,6 +32,8 @@ class CommentsController < ApplicationController
   end
 
   def update
+    authorize! @comment, to: :update?
+
     if @comment.update(comment_params)
       respond_to do |format|
         format.turbo_stream
@@ -43,6 +45,8 @@ class CommentsController < ApplicationController
   end
 
   def destroy
+    authorize! @comment, to: :destroy?
+
     @comment.destroy
     respond_to do |format|
       format.turbo_stream

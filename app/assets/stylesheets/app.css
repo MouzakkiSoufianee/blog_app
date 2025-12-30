@@ -116,6 +116,42 @@ a:hover { color: var(--accent-strong); }
   border-color: #fca5a5;
 }
 
+.btn-view {
+  background: rgba(147, 197, 253, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-view:hover {
+  background: rgba(147, 197, 253, 0.2);
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 16px rgba(96, 165, 250, 0.2);
+}
+
+.btn-edit {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.btn-edit:hover {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: var(--success);
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.2);
+}
+
+.btn-delete {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background: rgba(248, 113, 113, 0.2);
+  border-color: var(--danger);
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.2);
+}
+
 .flash {
   padding: 12px 14px;
   margin: 16px 0;

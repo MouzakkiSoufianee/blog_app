@@ -1,29 +1,241 @@
-<h2>Sign up</h2>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Create Account</h1>
+      <p class="auth-subtitle">Join our community today</p>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), local: true) do |f| %>
+      <% if resource.errors.any? %>
+        <div class="auth-errors">
+          <h3><%= pluralize(resource.errors.count, "error") %></h3>
+          <ul>
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      <div class="form-group">
+        <%= f.label :name, "Full Name" %>
+        <%= f.text_field :name, autofocus: true, autocomplete: "name", placeholder: "John Doe", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email, "Email Address" %>
+        <%= f.email_field :email, autocomplete: "email", placeholder: "you@example.com", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password %>
+        <% if @minimum_password_length %>
+          <span class="password-hint">(<%= @minimum_password_length %> characters minimum)</span>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", class: "form-input" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Create Account", class: "btn btn-primary btn-large" %>
+      </div>
+    <% end %>
+
+    <div class="auth-divider">or</div>
+
+    <div class="auth-links">
+      <p>Already have an account? <%= link_to "Sign in", new_session_path(resource_name), class: "auth-link" %></p>
+    </div>
   </div>
+</div>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+<style>
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #0b1021;
+    padding: 20px;
+  }
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+  .auth-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+  }
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+  .auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-<%= render "devise/shared/links" %>
+  .auth-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e5e7eb;
+    margin: 0 0 8px 0;
+  }
+
+  .auth-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .auth-errors {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-left: 4px solid #f87171;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .auth-errors h3 {
+    margin: 0 0 8px 0;
+    color: #fca5a5;
+    font-size: 14px;
+  }
+
+  .auth-errors ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #fca5a5;
+    font-size: 13px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 8px;
+  }
+
+  .password-hint {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #e5e7eb;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .form-input::placeholder {
+    color: #6b7280;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.1);
+  }
+
+  .form-actions {
+    margin-top: 24px;
+  }
+
+  .btn-primary {
+    background: #60a5fa;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #93c5fd;
+    box-shadow: 0 10px 20px rgba(96, 165, 250, 0.2);
+  }
+
+  .btn-large {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+
+  .auth-divider {
+    text-align: center;
+    margin: 24px 0;
+    color: #9ca3af;
+    font-size: 13px;
+    position: relative;
+  }
+
+  .auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    z-index: 0;
+  }
+
+  .auth-divider {
+    background: rgba(11, 16, 33, 1);
+    position: relative;
+    z-index: 1;
+    padding: 0 8px;
+  }
+
+  .auth-links {
+    text-align: center;
+  }
+
+  .auth-links p {
+    margin: 8px 0;
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  .auth-link {
+    color: #93c5fd;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .auth-link:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    .auth-card {
+      padding: 30px 20px;
+    }
+
+    .auth-header h1 {
+      font-size: 24px;
+    }
+  }
+</style>
+

@@ -1,10 +1,12 @@
 class PostsController < ApplicationController
-  include ActionPolicy::Controller
-
+  include Posts::Filterable
   before_action :set_post, only: %i[show edit update destroy publish unpublish]
 
   def index
-    @posts = Posts::Filter.call(params: params, current_user: current_user)
+    @posts = authorized_scope(Post)
+              .includes(:user)
+              .then { |scope| apply_filters(scope) }
+              .recent
     @users = User.order(:name)
   end
 
@@ -87,7 +89,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, :status, :published_at)
+    params.require(:post).permit(:title, :body, :status, :published_at, :cover_image)
   end
 
   def publish_now_param?

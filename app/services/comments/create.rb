@@ -17,7 +17,10 @@ module Comments
       return spam_result(comment) if spam?(comment.body)
 
       if comment.valid?
-        Comment.transaction { comment.save! }
+        Comment.transaction do
+          comment.save!
+          CommentMailer.new_comment(comment).deliver_later
+        end
         Result.success(payload: { comment: comment, post: post })
       else
         Result.failure(error: human_errors_for(comment), code: :invalid, payload: { comment: comment, post: post })

@@ -1,4 +1,15 @@
 class PostPolicy < ApplicationPolicy
+  relation_scope do |relation|
+    case user
+    when nil
+      relation.published_posts
+    when ->(u) { u.admin? }
+      relation.all
+    else
+      relation.published_posts.or(relation.where(user_id: user.id).drafts)
+    end
+  end
+
   def show?
     record.published? || owner? || admin?
   end
