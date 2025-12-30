@@ -6,11 +6,13 @@
     action: "turbo:submit-start->post-actions#submitting turbo:submit-end->post-actions#submitted",
     "post-actions-published-value": post.published?
   } do %>
-  <%= link_to "Edit", edit_post_path(post), class: "btn",
-      style: "background: linear-gradient(145deg, rgba(147, 197, 253, 0.14), rgba(96, 165, 250, 0.16)); border-color: var(--accent);",
-      data: { turbo_frame: "drawer" } %>
+  <% if user_signed_in? && allowed_to?(:edit?, post) %>
+    <%= link_to "Edit", edit_post_path(post), class: "btn",
+        style: "background: linear-gradient(145deg, rgba(147, 197, 253, 0.14), rgba(96, 165, 250, 0.16)); border-color: var(--accent);",
+        data: { turbo_frame: "drawer" } %>
+  <% end %>
 
-  <% if current_user == post.user %>
+  <% if user_signed_in? && allowed_to?(:publish?, post) %>
     <% if post.published? %>
       <%= button_to "Unpublish", unpublish_post_path(post), method: :patch, class: "btn btn-ghost", data: { "post-actions-target": "toggleButton" } %>
     <% else %>
@@ -18,8 +20,10 @@
     <% end %>
   <% end %>
 
-  <%= button_to "Delete", post_path(post), method: :delete,
-      class: "btn",
-      style: "background: linear-gradient(145deg, rgba(248, 113, 113, 0.14), rgba(239, 68, 68, 0.16)); border-color: var(--danger);",
-      form: { data: { turbo_frame: "_top", turbo_confirm: "Delete this post? Its comments will be removed too.", confirm_title: "Delete post", confirm_action: "Delete", confirm_cancel: "Keep it", confirm_kicker: "Heads up" } } %>
+  <% if user_signed_in? && allowed_to?(:destroy?, post) %>
+    <%= button_to "Delete", post_path(post), method: :delete,
+        class: "btn",
+        style: "background: linear-gradient(145deg, rgba(248, 113, 113, 0.14), rgba(239, 68, 68, 0.16)); border-color: var(--danger);",
+        form: { data: { turbo_frame: "_top", turbo_confirm: "Delete this post? Its comments will be removed too.", confirm_title: "Delete post", confirm_action: "Delete", confirm_cancel: "Keep it", confirm_kicker: "Heads up" } } %>
+  <% end %>
 <% end %>

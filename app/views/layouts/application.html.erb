@@ -132,7 +132,16 @@
         <div class="nav-actions">
           <%= link_to "Home", root_path, class: "nav-link" %>
           <%= link_to "Posts", posts_path, class: "nav-link" %>
-          <%= link_to "New Post", new_post_path, class: "btn btn-ghost" %>
+          <% if user_signed_in? %>
+            <%= link_to "New Post", new_post_path, class: "btn btn-ghost" %>
+            <span style="color: #999; font-size: 0.875rem;">
+              Signed in as <%= current_user.email %>
+            </span>
+            <%= button_to "Sign out", destroy_user_session_path, method: :delete, form: { "data-turbo": false }, class: "btn btn-ghost" %>
+          <% else %>
+            <%= link_to "Sign in", new_user_session_path, class: "btn btn-ghost" %>
+            <%= link_to "Sign up", new_user_registration_path, class: "btn btn-ghost" %>
+          <% end %>
         </div>
       </nav>
     </header>

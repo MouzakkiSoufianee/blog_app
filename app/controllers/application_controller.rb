@@ -1,12 +1,15 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  helper_method :current_user
+  authorize :user, through: :current_user
 
-  private
+  before_action :authenticate_user!, unless: :devise_controller?
 
-  def current_user
-    @current_user ||= User.first
+  protected
+
+  def authenticate_user!
+    return if devise_controller?
+    return if action_name.in?(%w[index show])
+    super
   end
 end

@@ -1,12 +1,15 @@
 class PostsController < ApplicationController
+  include ActionPolicy::Controller
+
   before_action :set_post, only: %i[show edit update destroy publish unpublish]
 
   def index
-    @posts = Posts::Filter.call(params: params)
+    @posts = Posts::Filter.call(params: params, current_user: current_user)
     @users = User.order(:name)
   end
 
   def show
+    authorize! @post, to: :show? if user_signed_in? || !@post.published?
     @comment = Comment.new
   end
 
@@ -29,9 +32,16 @@ class PostsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    # WHY: Check if current user is allowed to edit this post
+    # Only owner or admin can edit
+    authorize! @post, to: :edit?
+  end
 
   def update
+    # WHY: Check authorization before updating
+    authorize! @post, to: :update?
+
     if @post.update(post_params)
       respond_to do |format|
         format.turbo_stream
@@ -44,6 +54,9 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    # WHY: Only admin can delete
+    authorize! @post, to: :destroy?
+
     @post.destroy
     respond_to do |format|
       format.turbo_stream
@@ -52,14 +65,16 @@ class PostsController < ApplicationController
   end
 
   def publish
-    return unless authorize_post_owner!
+    # WHY: Check if user is allowed to publish this post
+    authorize! @post, to: :publish?
 
     result = Posts::Publish.call(post: @post, user: current_user)
     handle_publish_response(result, notice: "Post published.")
   end
 
   def unpublish
-    return unless authorize_post_owner!
+    # WHY: Check if user is allowed to unpublish this post
+    authorize! @post, to: :unpublish?
 
     result = Posts::Unpublish.call(post: @post, user: current_user)
     handle_publish_response(result, notice: "Post moved back to draft.")
@@ -77,13 +92,6 @@ class PostsController < ApplicationController
 
   def publish_now_param?
     post_params[:status].to_s == "published"
-  end
-
-  def authorize_post_owner!
-    return true if current_user.present? && current_user == @post.user
-
-    redirect_to @post, alert: "You are not allowed to perform that action."
-    false
   end
 
   def handle_publish_response(result, notice:)
